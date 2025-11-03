@@ -1,50 +1,72 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const db = require('../db');
+const db = require("../db");
 
-// Get all customers
-router.get('/', (req, res) => {
-  db.query('SELECT * FROM customer', (err, results) => {
-    if (err) return res.status(500).send(err);
+// ✅ Get all customers
+router.get("/", (req, res) => {
+  db.query("SELECT * FROM customer", (err, results) => {
+    if (err) {
+      console.error("❌ Database error:", err);
+      return res.status(500).json({ error: err.message });
+    }
     res.json(results);
   });
 });
 
-// Add customer
-router.post('/', (req, res) => {
-  const { name, phone, email } = req.body;
+// ✅ Add new customer
+router.post("/", (req, res) => {
+  const { Name, Phone_number, Email } = req.body;
+
+  if (!Name || !Phone_number || !Email) {
+    return res.status(400).json({ error: "All fields are required" });
+  }
+
   db.query(
-    'INSERT INTO customer (name, phone, email) VALUES (?, ?, ?)',
-    [name, phone, email],
+    "INSERT INTO customer (Name, Phone_number, Email) VALUES (?, ?, ?)",
+    [Name, Phone_number, Email],
     (err, result) => {
-      if (err) return res.status(500).send(err);
-      res.json({ message: 'Customer added successfully!', id: result.insertId });
+      if (err) {
+        console.error("❌ Database error:", err);
+        return res.status(500).json({ error: err.message });
+      }
+      res.json({ id: result.insertId, Name, Phone_number, Email });
     }
   );
 });
 
-// Update customer
-router.put('/:id', (req, res) => {
+// ✅ Update customer
+router.put("/:id", (req, res) => {
   const { id } = req.params;
-  const { name, phone, email } = req.body;
+  const { Name, Phone_number, Email } = req.body;
+
   db.query(
-    'UPDATE customer SET name=?, phone=?, email=? WHERE id=?',
-    [name, phone, email, id],
-    err => {
-      if (err) return res.status(500).send(err);
-      res.json({ message: 'Customer updated successfully!' });
+    "UPDATE customer SET Name=?, Phone_number=?, Email=? WHERE Customer_id=?",
+    [Name, Phone_number, Email, id],
+    (err, result) => {
+      if (err) {
+        console.error("❌ Database error:", err);
+        return res.status(500).json({ error: err.message });
+      }
+      if (result.affectedRows === 0)
+        return res.status(404).json({ message: "Customer not found" });
+      res.json({ message: "Customer updated successfully" });
     }
   );
 });
 
-// Delete customer
-router.delete('/:id', (req, res) => {
+// ✅ Delete customer
+router.delete("/:id", (req, res) => {
   const { id } = req.params;
-  db.query('DELETE FROM customer WHERE id=?', [id], err => {
-    if (err) return res.status(500).send(err);
-    res.json({ message: 'Customer deleted successfully!' });
+
+  db.query("DELETE FROM customer WHERE Customer_id=?", [id], (err, result) => {
+    if (err) {
+      console.error("❌ Database error:", err);
+      return res.status(500).json({ error: err.message });
+    }
+    if (result.affectedRows === 0)
+      return res.status(404).json({ message: "Customer not found" });
+    res.json({ message: "Customer deleted successfully" });
   });
 });
 
 module.exports = router;
-
