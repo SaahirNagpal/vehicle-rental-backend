@@ -13,6 +13,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Serve static files from public directory
+app.use(express.static('public'));
+
 // Import route files
 const customerRoutes = require("./routes/customer");
 const vehicleRoutes = require("./routes/vehicle");
