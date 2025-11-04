@@ -36,9 +36,9 @@ app.use("/api/booking", bookingRoutes);
 app.use("/api/stripe", stripeRoutes);
 app.use("/api/auth", authRoutes);
 
-// Root endpoint
+// Root endpoint - serve the frontend
 app.get("/", (req, res) => {
-  res.send("Vehicle Rental Management System Backend is Running!");
+  res.sendFile(__dirname + '/public/index.html');
 });
 
 // Handle unknown routes
