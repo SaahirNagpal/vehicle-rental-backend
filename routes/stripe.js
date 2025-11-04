@@ -15,6 +15,14 @@ const isStripeConfigured = stripe !== null;
  */
 router.post("/create-payment-intent", async (req, res) => {
   try {
+    // Check if Stripe is configured
+    if (!isStripeConfigured) {
+      return res.status(503).json({
+        success: false,
+        error: "Stripe payment service is not configured"
+      });
+    }
+
     const { amount, currency = "usd", metadata = {} } = req.body;
 
     // Validate required fields
