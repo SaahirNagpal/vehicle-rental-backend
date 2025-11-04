@@ -1,5 +1,5 @@
 // db.js - MySQL Connection Setup
-const mysql = require("mysql2");
+const mysql = require("mysql2/promise");
 
 const db = mysql.createConnection({
   host: "blofaxhczvsfkcmzsoxk-mysql.services.clever-cloud.com",       // e.g. bzcwxyz-mysql.services.clever-cloud.com
@@ -9,12 +9,13 @@ const db = mysql.createConnection({
   port: 3306, // usually 3306, but check Clever Cloud
 });
 
-db.connect((err) => {
-  if (err) {
-    console.error("Error connecting to MySQL:", err.message);
-  } else {
+// Test the connection
+db.connect()
+  .then(() => {
     console.log("Connected to MySQL Database!");
-  }
-});
+  })
+  .catch((err) => {
+    console.error("Error connecting to MySQL:", err.message);
+  });
 
 module.exports = db;
