@@ -1,3 +1,6 @@
+// Load environment variables
+require("dotenv").config();
+
 // Import dependencies
 const express = require("express");
 const cors = require("cors");
@@ -15,12 +18,20 @@ const customerRoutes = require("./routes/customer");
 const vehicleRoutes = require("./routes/vehicle");
 const rentalRoutes = require("./routes/rental");
 const paymentRoutes = require("./routes/payment");
+const availabilityRoutes = require("./routes/availability");
+const bookingRoutes = require("./routes/booking");
+const stripeRoutes = require("./routes/stripe");
+const authRoutes = require("./routes/auth");
 
 // Mount route files
 app.use("/api/customers", customerRoutes);
 app.use("/api/vehicles", vehicleRoutes);
 app.use("/api/rentals", rentalRoutes);
 app.use("/api/payments", paymentRoutes);
+app.use("/api/availability", availabilityRoutes);
+app.use("/api/booking", bookingRoutes);
+app.use("/api/stripe", stripeRoutes);
+app.use("/api/auth", authRoutes);
 
 // Root endpoint
 app.get("/", (req, res) => {
