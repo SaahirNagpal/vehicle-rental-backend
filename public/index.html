@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Rental Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-brand">
+                    <i class="fas fa-car"></i>
+                    <span>Vehicle Rental Pro</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="#home" class="nav-link active">Home</a></li>
+                    <li><a href="#vehicles" class="nav-link">Vehicles</a></li>
+                    <li><a href="#bookings" class="nav-link">My Bookings</a></li>
+                    <li><a href="#admin" class="nav-link">Admin</a></li>
+                </ul>
+                <button class="nav-toggle" id="navToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Home Page Section -->
+            <section id="home" class="page-section active">
+                <div class="hero-section">
+                    <div class="hero-content">
+                        <h1>Find Your Perfect Ride</h1>
+                        <p>Rent quality vehicles at competitive prices</p>
+
+                        <!-- Search Form -->
+                        <div class="search-form">
+                            <h3>Search Available Vehicles</h3>
+                            <form id="vehicleSearchForm">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="startDate">Pick-up Date</label>
+                                        <input type="date" id="startDate" name="startDate" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="endDate">Return Date</label>
+                                        <input type="date" id="endDate" name="endDate" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="vehicleType">Vehicle Type</label>
+                                        <select id="vehicleType" name="vehicleType">
+                                            <option value="">All Types</option>
+                                            <option value="Sedan">Sedan</option>
+                                            <option value="SUV">SUV</option>
+                                            <option value="Truck">Truck</option>
+                                            <option value="Luxury">Luxury</option>
+                                            <option value="Electric">Electric</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-search"></i> Search Vehicles
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Featured Vehicles -->
+                <div class="featured-vehicles">
+                    <h2>Featured Vehicles</h2>
+                    <div id="featuredVehicles" class="vehicles-grid">
+                        <!-- Vehicles will be loaded here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Vehicles Search Results Section -->
+            <section id="vehicles" class="page-section">
+                <div class="section-header">
+                    <h1>Available Vehicles</h1>
+                    <p>Find the perfect vehicle for your needs</p>
+                </div>
+
+                <!-- Search Filters -->
+                <div class="search-filters">
+                    <div class="filter-group">
+                        <label>Date Range:</label>
+                        <div class="date-filter">
+                            <input type="date" id="filterStartDate" placeholder="Start Date">
+                            <span>to</span>
+                            <input type="date" id="filterEndDate" placeholder="End Date">
+                        </div>
+                    </div>
+                    <div class="filter-group">
+                        <label>Vehicle Type:</label>
+                        <select id="filterType">
+                            <option value="">All Types</option>
+                            <option value="Sedan">Sedan</option>
+                            <option value="SUV">SUV</option>
+                            <option value="Truck">Truck</option>
+                            <option value="Luxury">Luxury</option>
+                            <option value="Electric">Electric</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Price Range:</label>
+                        <select id="filterPrice">
+                            <option value="">Any Price</option>
+                            <option value="0-50">Under $50/day</option>
+                            <option value="50-100">$50-$100/day</option>
+                            <option value="100-200">$100-$200/day</option>
+                            <option value="200+">Over $200/day</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" onclick="searchVehicles()">
+                        <i class="fas fa-search"></i> Apply Filters
+                    </button>
+                </div>
+
+                <!-- Vehicles Grid -->
+                <div id="vehiclesGrid" class="vehicles-grid">
+                    <!-- Vehicles will be loaded here -->
+                </div>
+
+                <!-- Loading State -->
+                <div id="loadingVehicles" class="loading-state" style="display: none;">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Loading vehicles...</p>
+                </div>
+            </section>
+
+            <!-- Booking Section -->
+            <section id="booking" class="page-section">
+                <div class="booking-container">
+                    <h1>Complete Your Booking</h1>
+
+                    <div class="booking-content">
+                        <!-- Vehicle Summary -->
+                        <div class="booking-summary">
+                            <h3>Vehicle Details</h3>
+                            <div id="bookingVehicleInfo">
+                                <!-- Vehicle info will be loaded here -->
+                            </div>
+                        </div>
+
+                        <!-- Booking Form -->
+                        <div class="booking-form">
+                            <h3>Customer Information</h3>
+                            <form id="bookingForm">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="customerName">Full Name *</label>
+                                        <input type="text" id="customerName" name="name" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="customerEmail">Email *</label>
+                                        <input type="email" id="customerEmail" name="email" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="customerPhone">Phone Number *</label>
+                                        <input type="tel" id="customerPhone" name="phone" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="paymentMethod">Payment Method</label>
+                                        <select id="paymentMethod" name="paymentMethod">
+                                            <option value="credit_card">Credit Card</option>
+                                            <option value="debit_card">Debit Card</option>
+                                            <option value="paypal">PayPal</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="booking-pricing">
+                                    <h4>Price Breakdown</h4>
+                                    <div id="priceBreakdown">
+                                        <!-- Price details will be calculated here -->
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-success btn-lg">
+                                    <i class="fas fa-lock"></i> Complete Booking
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- My Bookings Section -->
+            <section id="bookings" class="page-section">
+                <div class="section-header">
+                    <h1>My Bookings</h1>
+                    <p>View and manage your rental bookings</p>
+                </div>
+
+                <div class="booking-search">
+                    <input type="email" id="customerEmailSearch" placeholder="Enter your email to view bookings">
+                    <button class="btn btn-primary" onclick="loadCustomerBookings()">
+                        <i class="fas fa-search"></i> Search Bookings
+                    </button>
+                </div>
+
+                <div id="bookingsList" class="bookings-list">
+                    <!-- Bookings will be loaded here -->
+                </div>
+            </section>
+
+            <!-- Admin Section -->
+            <section id="admin" class="page-section">
+                <div class="section-header">
+                    <h1>Admin Dashboard</h1>
+                    <p>Manage vehicles, customers, and bookings</p>
+                </div>
+
+                <!-- Admin Login -->
+                <div id="adminLogin" class="admin-login">
+                    <div class="login-form">
+                        <h3>Admin Login</h3>
+                        <form id="adminLoginForm">
+                            <div class="form-group">
+                                <label for="adminEmail">Email</label>
+                                <input type="email" id="adminEmail" value="admin@vehicle-rental.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="adminPassword">Password</label>
+                                <input type="password" id="adminPassword" value="admin123" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-sign-in-alt"></i> Login
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Admin Dashboard (hidden until login) -->
+                <div id="adminDashboard" class="admin-dashboard" style="display: none;">
+                    <div class="admin-stats">
+                        <div class="stat-card">
+                            <i class="fas fa-car"></i>
+                            <h3 id="totalVehicles">0</h3>
+                            <p>Total Vehicles</p>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-users"></i>
+                            <h3 id="totalCustomers">0</h3>
+                            <p>Total Customers</p>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-calendar-check"></i>
+                            <h3 id="activeRentals">0</h3>
+                            <p>Active Rentals</p>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-dollar-sign"></i>
+                            <h3 id="totalRevenue">$0</h3>
+                            <p>Total Revenue</p>
+                        </div>
+                    </div>
+
+                    <div class="admin-tabs">
+                        <button class="tab-btn active" onclick="showAdminTab('vehicles')">Vehicles</button>
+                        <button class="tab-btn" onclick="showAdminTab('customers')">Customers</button>
+                        <button class="tab-btn" onclick="showAdminTab('rentals')">Rentals</button>
+                        <button class="tab-btn" onclick="showAdminTab('payments')">Payments</button>
+                    </div>
+
+                    <div class="admin-content">
+                        <!-- Tab content will be loaded here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Booking Confirmation Modal -->
+            <div id="bookingModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Booking Confirmation</h2>
+                        <button class="modal-close" onclick="closeModal('bookingModal')">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="bookingConfirmation">
+                            <!-- Booking details will be shown here -->
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" onclick="closeModal('bookingModal')">Close</button>
+                        <button class="btn btn-primary" onclick="window.location.href='#home'">Return Home</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <p>&copy; 2025 Vehicle Rental Management System. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/js/app.js"></script>
+</body>
+</html>
