@@ -1,6 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+
+// Initialize Stripe with API key or return dummy implementation if key not set
+const stripe = process.env.STRIPE_SECRET_KEY && process.env.STRIPE_SECRET_KEY !== 'sk_test_placeholder_key_here'
+  ? require("stripe")(process.env.STRIPE_SECRET_KEY)
+  : null;
+
+// Check if Stripe is properly configured
+const isStripeConfigured = stripe !== null;
 
 /**
  * Create a payment intent for a booking
